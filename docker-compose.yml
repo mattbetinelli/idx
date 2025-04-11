@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    container_name: ideaxchange-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    networks:
+      - ideaxchange-network
+
+  # Backend API service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ideaxchange-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/ideaxchange?authSource=admin
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=30d
+      - FRONTEND_URL=${FRONTEND_URL}
+    networks:
+      - ideaxchange-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ideaxchange-frontend
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=https://${API_DOMAIN}
+    volumes:
+      - ./ssl:/etc/nginx/ssl
+    networks:
+      - ideaxchange-network
+
+networks:
+  ideaxchange-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

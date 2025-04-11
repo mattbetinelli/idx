@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaXchange - User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #6610f2;
+        }
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+            height: calc(100vh - 56px);
+            position: sticky;
+            top: 56px;
+        }
+        .sidebar-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+        }
+        .sidebar-item.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #6610f2;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #f1f1f1;
+            font-weight: 600;
+        }
+        .profile-header {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #f1f1f1;
+            border-bottom: 1px solid #f1f1f1;
+            margin: 20px 0;
+        }
+        .profile-stat-item {
+            flex: 1;
+        }
+        .profile-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6610f2;
+        }
+        .profile-stat-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .badge-custom {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .skill-badge {
+            background-color: #e2f0fd;
+            color: #0d6efd;
+        }
+        .interest-badge {
+            background-color: #e2f8f0;
+            color: #20c997;
+        }
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fff3cd;
+            color: #ffc107;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .achievement-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #ffc107;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .level-indicator {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background-color: #6610f2;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .progress-xp {
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .idea-card, .project-card {
+            transition: transform 0.2s;
+        }
+        .idea-card:hover, .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .connection-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .profile-header {
+                text-align: center;
+            }
+            .profile-avatar {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">IdeaXchange</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Virtual Spaces</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Ideas</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-2">
+                    <input class="form-control me-2" type="search" placeholder="Search ideas, people, spaces...">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+                <div class="d-flex align-items-center">
+                    <div class="position-relative me-3">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
+                        <div class="d-none d-md-block">
+                            <div class="fw-bold">John Doe</div>
+                            <div class="d-flex align-items-center">
+                                <span class="level-indicator me-1" style="font-size: 12px; padding: 2px 8px;">Lv 5</span>
+                                <div class="progress progress-xp flex-grow-1" style="width: 60px;">
+                                    <div class="progress-bar bg-success" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="sidebar-item">
+                    <i class="bi bi-house-door me-2"></i> Dashboard
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-lightbulb me-2"></i> My Ideas
+                </div>
+                <div class="sidebar-item active">
+                    <i class="bi bi-person me-2"></i> My Profile
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-people me-2"></i> My Network
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-calendar-event me-2"></i> Events
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-chat-dots me-2"></i> Messages
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-trophy me-2"></i> Achievements
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-gear me-2"></i> Settings
+                </div>
+                <div class="mt-4 p-3">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i> New Idea
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="row">
+                        <div class="col-md-2 text-center text-md-start">
+                            <img src="https://via.placeholder.com/120" alt="Profile Avatar" class="profile-avatar">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex align-items-center mb-2">
+                                <h3 class="mb-0 me-3">John Doe</h3>
+                                <span class="level-indicator">Level 5</span>
+                            </div>
+                            <p class="text-muted">UX Designer & Full Stack Developer</p>
+                            <p>Passionate about creating user-centered digital experiences and solving complex problems through innovative technology solutions.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <div class="me-4">
+                                    <div class="fw-bold">1,250 XP</div>
+                                    <div class="small text-muted">Next level: 1,500 XP</div>
+                                </div>
+                                <div class="flex-grow-1" style="max-width: 200px;">
+                                    <div class="progress progress-xp">
+                                        <div class="progress-bar bg-success" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-outline-primary mb-2">
+                                <i class="bi bi-pencil me-2"></i> Edit Profile
+                            </button>
+                            <div class="form-check form-switch mt-3 d-flex justify-content-md-end align-items-center">
+                                <input class="form-check-input me-2" type="checkbox" id="profileVisibility" checked>
+                                <label class="form-check-label" for="profileVisibility">Public Profile</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats mt-4">
+                        <div class="profile-stat-item">
+                            <div class="profile-stat-value">12</div>
+                            <div class="profile-stat-label">Ideas</div>
+                        </div>
+                        <div class="profile-stat-item">
+                            <div class="profile-stat-value">5</div>
+                            <div class="profile-stat-label">Projects</div>
+                        </div>
+                        <div class="profile-stat-item">
+                            <div class="profile-stat-value">48</div>
+                            <div class="profile-stat-label">Connections</div>
+                        </div>
+                        <div class="profile-stat-item">
+                            <div class="profile-stat-value">820</div>
+                            <div class="profile-stat-label">Reputation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tabs -->
+                <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab">About</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ideas-tab" data-bs-toggle="tab" data-bs-target="#ideas" type="button" role="tab">Ideas</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab">Projects</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab">Achievements</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections" type="button" role="tab">Connections</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="profileTabsContent">
+                    <!-- About Tab -->
+                    <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-tools me-2"></i> Skills
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap">
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> UX Design
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> UI Development
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> React.js
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Node.js
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> TypeScript
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> MongoDB
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> User Research
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Wireframing
+                                            </span>
+                                            <span class="badge-custom skill-badge">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Prototyping
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-heart me-2"></i> Interests
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap">
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> Sustainable Technology
+                                            </span>
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> AI & Machine Learning
+                                            </span>
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> Education Tech
+                                            </span>
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> Health & Wellness
+                                            </span>
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> Smart Cities
+                                            </span>
+                                            <span class="badge-custom interest-badge">
+                                                <i class="bi bi-star-fill me-1"></i> Blockchain
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-briefcase me-2"></i> Experience
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">Senior UX Designer</h6>
+                                                <span class="text-muted small">2022 - Present</span>
+                                            </div>
+                                            <div class="text-muted mb-2">TechInnovate Inc.</div>
+                                            <p class="small">Leading UX design for enterprise SaaS products, conducting user research, and implementing design systems.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">Full Stack Developer</h6>
+                                                <span class="text-muted small">2019 - 2022</span>
+                                            </div>
+                                            <div class="text-muted mb-2">WebSolutions Co.</div>
+                                            <p class="small">Developed responsive web applications using React.js and Node.js, implemented RESTful APIs and database solutions.</p>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">UI/UX Designer</h6>
+                                                <span class="text-muted small">2017 - 2019</span>
+                                            </div>
+                                            <div class="text-muted mb-2">DigitalCraft Agency</div>
+                                            <p class="small">Created user interfaces for mobile and web applications, conducted usability testing and iterative design improvements.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-mortarboard me-2"></i> Education
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">Master of Human-Computer Interaction</h6>
+                                                <span class="text-muted small">2015 - 2017</span>
+                                            </div>
+                                            <div class="text-muted">Stanford University</div>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">Bachelor of Computer Science</h6>
+                                                <span class="text-muted small">2011 - 2015</span>
+                                            </div>
+                                            <div class="text-muted">MIT</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ideas Tab -->
+                    <div class="tab-pane fade" id="ideas" role="tabpanel" aria-labelledby="ideas-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">My Ideas</h5>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i> New Idea
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card idea-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-success">Active</span>
+                                            <span class="text-muted small">Posted 2 weeks ago</span>
+                                        </div>
+                                        <h5 class="card-title">AI-Powered Personal Learning Assistant</h5>
+                                        <p class="card-text">An AI assistant that adapts to individual learning styles and helps students master complex subjects through personalized guidance.</p>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Education</span>
+                                            <span class="badge badge-custom">AI</span>
+                                            <span class="badge badge-custom">EdTech</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-heart me-1"></i> 42
+                                                <i class="bi bi-chat-dots ms-2 me-1"></i> 15
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Manage</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card idea-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-warning">In Progress</span>
+                                            <span class="text-muted small">Posted 1 month ago</span>
+                                        </div>
+                                        <h5 class="card-title">Smart Urban Mobility Platform</h5>
+                                        <p class="card-text">An integrated platform that combines public transit, ride-sharing, and micro-mobility options to optimize urban transportation.</p>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Smart Cities</span>
+                                            <span class="badge badge-custom">Mobility</span>
+                                            <span class="badge badge-custom">Sustainability</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-heart me-1"></i> 36
+                                                <i class="bi bi-chat-dots ms-2 me-1"></i> 12
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Manage</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card idea-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-secondary">Draft</span>
+                                            <span class="text-muted small">Last edited 3 days ago</span>
+                                        </div>
+                                        <h5 class="card-title">Mental Wellness Companion App</h5>
+                                        <p class="card-text">A holistic mental wellness app that combines mood tracking, guided meditation, and on-demand professional support.</p>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Health</span>
+                                            <span class="badge badge-custom">Wellness</span>
+                                            <span class="badge badge-custom">Mental Health</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-heart me-1"></i> 0
+                                                <i class="bi bi-chat-dots ms-2 me-1"></i> 0
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects Tab -->
+                    <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Active Projects</h5>
+                            <div>
+                                <button class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-filter me-2"></i> Filter
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i> New Project
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="card project-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="card-title mb-0">EcoTrack: Sustainability Monitoring</h5>
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                        <p class="card-text">A platform for businesses to track and optimize their environmental impact through real-time data analytics.</p>
+                                        <div class="progress mb-3" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 75%"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small mb-3">
+                                            <span>Progress: 75%</span>
+                                            <span>Deadline: June 15, 2025</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-3">Team:</div>
+                                            <div class="d-flex">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; margin-left: -5px;">
+                                                    <span class="small">+2</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-kanban me-2"></i> View Board
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-chat-dots me-2"></i> Team Chat
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card project-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="card-title mb-0">LearnHub: Interactive Learning Platform</h5>
+                                            <span class="badge bg-warning">In Progress</span>
+                                        </div>
+                                        <p class="card-text">An interactive learning platform that combines video lessons, quizzes, and collaborative projects for effective skill development.</p>
+                                        <div class="progress mb-3" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small mb-3">
+                                            <span>Progress: 45%</span>
+                                            <span>Deadline: August 30, 2025</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-3">Team:</div>
+                                            <div class="d-flex">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                                <img src="https://via.placeholder.com/30" alt="Team Member" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-kanban me-2"></i> View Board
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-chat-dots me-2"></i> Team Chat
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Tab -->
+                    <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="achievements-tab">
+                        <div class="mb-4">
+                            <h5>Badges & Achievements</h5>
+                            <p class="text-muted">Showcase of your accomplishments and contributions on the platform.</p>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-award me-2"></i> Recent Achievements
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap">
+                                            <div class="achievement-badge">
+                                                <div class="achievement-icon">
+                                                    <i class="bi bi-lightbulb-fill"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">Idea Generator</div>
+                                                    <div class="small">Created 10+ ideas</div>
+                                                </div>
+                                            </div>
+                                            <div class="achievement-badge">
+                                                <div class="achievement-icon">
+                                                    <i class="bi bi-people-fill"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">Connector</div>
+                                                    <div class="small">Built a network of 50+ connections</div>
+                                                </div>
+                                            </div>
+                                            <div class="achievement-badge">
+                                                <div class="achievement-icon">
+                                                    <i class="bi bi-chat-dots-fill"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">Active Contributor</div>
+                                                    <div class="small">Provided valuable feedback on 25+ ideas</div>
+                                                </div>
+                                            </div>
+                                            <div class="achievement-badge">
+                                                <div class="achievement-icon">
+                                                    <i class="bi bi-rocket-fill"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">Project Launcher</div>
+                                                    <div class="small">Successfully launched 3 projects</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-graph-up me-2"></i> Skill Progress
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>UX Design</span>
+                                                <span>Advanced</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" style="width: 90%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>Frontend Development</span>
+                                                <span>Advanced</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" style="width: 85%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>Backend Development</span>
+                                                <span>Intermediate</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-info" style="width: 70%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>Project Management</span>
+                                                <span>Intermediate</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-info" style="width: 65%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>Data Analysis</span>
+                                                <span>Beginner</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-warning" style="width: 40%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-trophy me-2"></i> Leaderboard Position
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center mb-4">
+                                            <div style="width: 100px; height: 100px; background-color: #6610f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 24px; font-weight: bold;">
+                                                #42
+                                            </div>
+                                            <div class="mt-2">
+                                                <div class="fw-bold">Top 5%</div>
+                                                <div class="text-muted">of all users</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-around text-center">
+                                            <div>
+                                                <div class="fw-bold">820</div>
+                                                <div class="text-muted small">Reputation</div>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">1,250</div>
+                                                <div class="text-muted small">XP</div>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">15</div>
+                                                <div class="text-muted small">Badges</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connections Tab -->
+                    <div class="tab-pane fade" id="connections" role="tabpanel" aria-labelledby="connections-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">My Network</h5>
+                            <div>
+                                <button class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-filter me-2"></i> Filter
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="bi bi-search me-2"></i> Find Connections
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">Sarah Johnson</h6>
+                                                <p class="text-muted small mb-0">Environmental Engineer</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Sustainability</span>
+                                            <span class="badge badge-custom">Green Energy</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 3 months ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">Michael Chen</h6>
+                                                <p class="text-muted small mb-0">AI Researcher</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">AI</span>
+                                            <span class="badge badge-custom">Machine Learning</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 1 year ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">Elena Rodriguez</h6>
+                                                <p class="text-muted small mb-0">UX Designer</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">UX Design</span>
+                                            <span class="badge badge-custom">User Research</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 6 months ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">David Kim</h6>
+                                                <p class="text-muted small mb-0">Frontend Developer</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">React</span>
+                                            <span class="badge badge-custom">TypeScript</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 2 months ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">Priya Sharma</h6>
+                                                <p class="text-muted small mb-0">Data Scientist</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Data Analysis</span>
+                                            <span class="badge badge-custom">Python</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 4 months ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="https://via.placeholder.com/50" alt="Connection Avatar" class="connection-avatar me-3">
+                                            <div>
+                                                <h6 class="mb-0">Marcus Johnson</h6>
+                                                <p class="text-muted small mb-0">Product Manager</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            <span class="badge badge-custom">Product Strategy</span>
+                                            <span class="badge badge-custom">Agile</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Connected 8 months ago</span>
+                                            <button class="btn btn-sm btn-outline-primary">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-4">
+        <div class="container">
+            <p>© 2025 IdeaXchange. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</body>
+</html>

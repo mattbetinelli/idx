@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaXchange - Idea Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #6610f2;
+        }
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+            height: calc(100vh - 56px);
+            position: sticky;
+            top: 56px;
+        }
+        .sidebar-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+        }
+        .sidebar-item.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #6610f2;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #f1f1f1;
+            font-weight: 600;
+        }
+        .idea-header {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .badge-custom {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .level-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #6610f2;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .progress-xp {
+            height: 6px;
+            border-radius: 3px;
+        }
+        .rating-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .rating-label {
+            width: 120px;
+            font-weight: 500;
+        }
+        .rating-stars {
+            display: flex;
+            gap: 5px;
+        }
+        .rating-star {
+            color: #e9ecef;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .rating-star.filled {
+            color: #ffc107;
+        }
+        .rating-value {
+            margin-left: 10px;
+            font-weight: 500;
+            color: #6c757d;
+        }
+        .comment {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .comment:last-child {
+            border-bottom: none;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .comment-user {
+            display: flex;
+            align-items: center;
+        }
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .comment-content {
+            margin-left: 50px;
+        }
+        .comment-actions {
+            margin-top: 10px;
+            margin-left: 50px;
+        }
+        .idea-action-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .progress-bar-container {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #6610f2;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .stage-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        .stage-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e9ecef;
+            z-index: 1;
+        }
+        .stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .stage-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            border: 2px solid #fff;
+        }
+        .stage-dot.active {
+            background-color: #6610f2;
+            color: white;
+        }
+        .stage-dot.completed {
+            background-color: #20c997;
+            color: white;
+        }
+        .stage-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+            .stage-label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">IdeaXchange</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Virtual Spaces</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Ideas</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-2">
+                    <input class="form-control me-2" type="search" placeholder="Search ideas, people, spaces...">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+                <div class="d-flex align-items-center">
+                    <div class="position-relative me-3">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
+                        <div class="d-none d-md-block">
+                            <div class="fw-bold">John Doe</div>
+                            <div class="d-flex align-items-center">
+                                <span class="level-indicator me-1" style="font-size: 12px; padding: 2px 8px;">Lv 5</span>
+                                <div class="progress progress-xp flex-grow-1" style="width: 60px;">
+                                    <div class="progress-bar bg-success" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="sidebar-item">
+                    <i class="bi bi-house-door me-2"></i> Dashboard
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-lightbulb me-2"></i> My Ideas
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-person me-2"></i> My Profile
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-people me-2"></i> My Network
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-grid-3x3-gap me-2"></i> Virtual Spaces
+                </div>
+                <div class="sidebar-item active">
+                    <i class="bi bi-search me-2"></i> Explore Ideas
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-calendar-event me-2"></i> Events
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-chat-dots me-2"></i> Messages
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-trophy me-2"></i> Achievements
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-gear me-2"></i> Settings
+                </div>
+                <div class="mt-4 p-3">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i> New Idea
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Idea Header -->
+                <div class="idea-header">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge bg-success me-2">Active</span>
+                                <span class="text-muted">Posted 2 weeks ago</span>
+                                <span class="ms-auto">
+                                    <i class="bi bi-eye me-1"></i> 245 views
+                                </span>
+                            </div>
+                            <h2 class="mb-3">AI-Powered Personal Learning Assistant</h2>
+                            <div class="d-flex flex-wrap mb-3">
+                                <span class="badge-custom me-2">Education</span>
+                                <span class="badge-custom me-2">AI</span>
+                                <span class="badge-custom me-2">EdTech</span>
+                                <span class="badge-custom">Machine Learning</span>
+                            </div>
+                            <p class="lead">An AI assistant that adapts to individual learning styles and helps students master complex subjects through personalized guidance.</p>
+                            
+                            <div class="stage-indicator">
+                                <div class="stage">
+                                    <div class="stage-dot completed">
+                                        <i class="bi bi-check"></i>
+                                    </div>
+                                    <div class="stage-label">Concept</div>
+                                </div>
+                                <div class="stage">
+                                    <div class="stage-dot completed">
+                                        <i class="bi bi-check"></i>
+                                    </div>
+                                    <div class="stage-label">Validation</div>
+                                </div>
+                                <div class="stage">
+                                    <div class="stage-dot active">
+                                        <i class="bi bi-pencil"></i>
+                                    </div>
+                                    <div class="stage-label">Development</div>
+                                </div>
+                                <div class="stage">
+                                    <div class="stage-dot">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <div class="stage-label">Team Building</div>
+                                </div>
+                                <div class="stage">
+                                    <div class="stage-dot">
+                                        <i class="bi bi-rocket"></i>
+                                    </div>
+                                    <div class="stage-label">Launch</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap mt-4">
+                                <button class="btn btn-primary idea-action-btn">
+                                    <i class="bi bi-hand-thumbs-up me-2"></i> Support (42)
+                                </button>
+                                <button class="btn btn-outline-primary idea-action-btn">
+                                    <i class="bi bi-chat-dots me-2"></i> Comment (15)
+                                </button>
+                                <button class="btn btn-outline-primary idea-action-btn">
+                                    <i class="bi bi-people me-2"></i> Join Team
+                                </button>
+                                <button class="btn btn-outline-primary idea-action-btn">
+                                    <i class="bi bi-share me-2"></i> Share
+                                </button>
+                                <button class="btn btn-outline-primary idea-action-btn">
+                                    <i class="bi bi-bookmark me-2"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="bi bi-person-circle me-2"></i> Idea Creator
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="https://via.placeholder.com/60" alt="Creator Avatar" class="rounded-circle me-3">
+                                        <div>
+                                            <h6 class="mb-0">John Doe</h6>
+                                            <p class="text-muted small mb-0">UX Designer & Developer <span class="level-indicator">Lv 5</span></p>
+                                        </div>
+                                    </div>
+                                    <p class="small">Passionate about creating user-centered digital experiences and solving complex problems through innovative technology solutions.</p>
+                                    <button class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="bi bi-chat-dots me-2"></i> Contact Creator
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="bi bi-graph-up me-2"></i> Idea Stats
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Support</span>
+                                            <span>42</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar-fill" style="width: 70%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Comments</span>
+                                            <span>15</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar-fill" style="width: 45%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Team Members</span>
+                                            <span>4</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar-fill" style="width: 40%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Completion</span>
+                                            <span>35%</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar-fill" style="width: 35%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Idea Details -->
+                        <div class="card">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs" id="ideaTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">Description</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="updates-tab" data-bs-toggle="tab" data-bs-target="#updates" type="button" role="tab">Updates</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab">Comments</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab">Team</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="ideaTabsContent">
+                                    <!-- Description Tab -->
+                                    <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                                        <h5>Problem Statement</h5>
+                                        <p>Traditional education often follows a one-size-fits-all approach, which doesn't account for individual learning styles, paces, or preferences. This leads to inefficient learning experiences, knowledge gaps, and decreased motivation for many students.</p>
+                                        
+                                        <h5>Solution</h5>
+                                        <p>The AI-Powered Personal Learning Assistant is an intelligent platform that uses machine learning algorithms to understand each student's unique learning style, strengths, weaknesses, and preferences. It then creates personalized learning paths, adapts content delivery methods, and provides targeted feedback to optimize the learning experience.</p>
+                                        
+                                        <h5>Key Features</h5>
+                                        <ul>
+                                            <li><strong>Learning Style Assessment:</strong> Initial assessment to determine the student's preferred learning modalities (visual, auditory, reading/writing, kinesthetic).</li>
+                                            <li><strong>Adaptive Content Delivery:</strong> Presents educational content in formats that match the student's learning style.</li>
+                                            <li><strong>Progress Tracking:</strong> Monitors comprehension and retention through interactive quizzes and exercises.</li>
+                                            <li><strong>Personalized Feedback:</strong> Provides specific, actionable feedback based on performance patterns.</li>
+                                            <li><strong>Spaced Repetition:</strong> Schedules review sessions at optimal intervals to enhance long-term retention.</li>
+                                            <li><strong>Concept Mapping:</strong> Visualizes connections between concepts to build comprehensive understanding.</li>
+                                            <li><strong>Natural Language Interface:</strong> Allows students to ask questions and receive explanations in conversational language.</li>
+                                        </ul>
+                                        
+                                        <h5>Target Market</h5>
+                                        <p>Primary: K-12 and university students seeking to improve their learning efficiency and academic performance.</p>
+                                        <p>Secondary: Adult learners pursuing professional development or acquiring new skills.</p>
+                                        
+                                        <h5>Technical Requirements</h5>
+                                        <ul>
+                                            <li>Machine learning algorithms for learning style classification and content adaptation</li>
+                                            <li>Natural language processing for conversational interface</li>
+                                            <li>Content repository with multiple format versions of educational materials</li>
+                                            <li>User-friendly interface accessible across devices (desktop, tablet, mobile)</li>
+                                            <li>Data analytics dashboard for tracking progress and identifying patterns</li>
+                                        </ul>
+                                        
+                                        <h5>Current Status</h5>
+                                        <p>We have completed the initial concept validation through user interviews and developed a prototype that demonstrates the core functionality. We are currently working on refining the machine learning algorithms and expanding the content repository. We're seeking team members with expertise in educational psychology, machine learning, and content development.</p>
+                                    </div>
+                                    
+                                    <!-- Updates Tab -->
+                                    <div class="tab-pane fade" id="updates" role="tabpanel" aria-labelledby="updates-tab">
+                                        <div class="mb-4 pb-4 border-bottom">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h6 class="mb-0">Prototype Testing Results</h6>
+                                                <span class="text-muted small">3 days ago</span>
+                                            </div>
+                                            <p>We've completed the first round of prototype testing with 25 students from various educational backgrounds. The results are promising:</p>
+                                            <ul>
+                                                <li>92% of participants found the learning style assessment accurate</li>
+                                                <li>85% reported better understanding of concepts when presented in their preferred learning style</li>
+                                                <li>78% expressed interest in using the platform regularly</li>
+                                            </ul>
+                                            <p>Key feedback for improvement includes enhancing the conversational interface and adding more interactive elements for kinesthetic learners.</p>
+                                        </div>
+                                        <div class="mb-4 pb-4 border-bottom">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h6 class="mb-0">Partnership with Educational Content Provider</h6>
+                                                <span class="text-muted small">1 week ago</span>
+                                            </div>
+                                            <p>We're excited to announce a partnership with LearnSphere, a leading educational content provider. This collaboration will give us access to their extensive library of educational materials across various subjects, which we'll adapt for different learning styles within our platform.</p>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h6 class="mb-0">Algorithm Development Milestone</h6>
+                                                <span class="text-muted small">2 weeks ago</span>
+                                            </div>
+                                            <p>Our development team has achieved a significant milestone in refining the machine learning algorithms. The latest version shows a 35% improvement in accurately predicting learning style preferences based on user interactions, and a 28% improvement in content adaptation recommendations.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Comments Tab -->
+                                    <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                                        <div class="mb-4">
+                                            <h6>Add Your Comment</h6>
+                                            <textarea class="form-control mb-3" rows="3" placeholder="Share your thoughts or ask a question..."></textarea>
+                                            <button class="btn btn-primary">Post Comment</button>
+                                        </div>
+                                        
+                                        <hr>
+                                        
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <div class="comment-user">
+                                                    <img src="https://via.placeholder.com/40" alt="User Avatar" class="comment-avatar">
+                                                    <div>
+                                                        <div class="fw-bold">Sarah Johnson</div>
+                                                        <div class="text-muted small">Environmental Engineer <span class="level-indicator">Lv 7</span></div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted small">2 days ago</span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>This is a fantastic idea! As someone who struggled with traditional teaching methods throughout school, I can see how valuable this would be. Have you considered incorporating environmental science topics into your content repository? I'd be happy to contribute materials in that area.</p>
+                                            </div>
+                                            <div class="comment-actions">
+                                                <button class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="bi bi-hand-thumbs-up me-1"></i> Like (5)
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-reply me-1"></i> Reply
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <div class="comment-user">
+                                                    <img src="https://via.placeholder.com/40" alt="User Avatar" class="comment-avatar">
+                                                    <div>
+                                                        <div class="fw-bold">Michael Chen</div>
+                                                        <div class="text-muted small">AI Researcher <span class="level-indicator">Lv 6</span></div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted small">4 days ago</span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>I'm curious about the technical implementation. What specific ML algorithms are you using for learning style classification? Have you considered using transformer models for the NLP component? I've had success with BERT-based models for educational applications.</p>
+                                            </div>
+                                            <div class="comment-actions">
+                                                <button class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="bi bi-hand-thumbs-up me-1"></i> Like (3)
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-reply me-1"></i> Reply
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <div class="comment-user">
+                                                    <img src="https://via.placeholder.com/40" alt="User Avatar" class="comment-avatar">
+                                                    <div>
+                                                        <div class="fw-bold">John Doe</div>
+                                                        <div class="text-muted small">UX Designer <span class="level-indicator">Lv 5</span></div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted small">4 days ago</span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>@Michael Chen Thanks for your interest! We're currently using a combination of supervised learning (Random Forest) for initial classification based on our assessment questionnaire, and reinforcement learning to refine the model based on user interactions and feedback. We are indeed using BERT for our NLP component, specifically a fine-tuned version for educational content. Would love to discuss this further - I'll send you a direct message!</p>
+                                            </div>
+                                            <div class="comment-actions">
+                                                <button class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="bi bi-hand-thumbs-up me-1"></i> Like (2)
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-reply me-1"></i> Reply
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Team Tab -->
+                                    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h6 class="mb-0">Current Team (4 members)</h6>
+                                            <button class="btn btn-outline-primary">
+                                                <i class="bi bi-people me-2"></i> Join Team
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <img src="https://via.placeholder.com/50" alt="Team Member" class="rounded-circle me-3">
+                                                            <div>
+                                                                <h6 class="mb-0">John Doe</h6>
+                                                                <p class="text-muted small mb-0">Project Lead & UX Designer <span class="level-indicator">Lv 5</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="small">Responsible for overall project direction, user experience design, and team coordination.</p>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-chat-dots me-2"></i> Contact
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <img src="https://via.placeholder.com/50" alt="Team Member" class="rounded-circle me-3">
+                                                            <div>
+                                                                <h6 class="mb-0">Michael Chen</h6>
+                                                                <p class="text-muted small mb-0">AI Engineer <span class="level-indicator">Lv 6</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="small">Leading the development of machine learning algorithms and natural language processing components.</p>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-chat-dots me-2"></i> Contact
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <img src="https://via.placeholder.com/50" alt="Team Member" class="rounded-circle me-3">
+                                                            <div>
+                                                                <h6 class="mb-0">Elena Rodriguez</h6>
+                                                                <p class="text-muted small mb-0">Educational Psychologist <span class="level-indicator">Lv 4</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="small">Providing expertise on learning styles, educational content adaptation, and assessment methodologies.</p>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-chat-dots me-2"></i> Contact
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <img src="https://via.placeholder.com/50" alt="Team Member" class="rounded-circle me-3">
+                                                            <div>
+                                                                <h6 class="mb-0">David Kim</h6>
+                                                                <p class="text-muted small mb-0">Full Stack Developer <span class="level-indicator">Lv 8</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="small">Implementing the technical infrastructure, database design, and user interface components.</p>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-chat-dots me-2"></i> Contact
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4">
+                                            <h6>Open Positions</h6>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h6 class="mb-0">Content Developer</h6>
+                                                        <span class="badge bg-primary">Open</span>
+                                                    </div>
+                                                    <p class="text-muted small mb-2">We're looking for someone to help develop and adapt educational content for different learning styles.</p>
+                                                    <button class="btn btn-sm btn-outline-primary">Apply</button>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h6 class="mb-0">UI/UX Designer</h6>
+                                                        <span class="badge bg-primary">Open</span>
+                                                    </div>
+                                                    <p class="text-muted small mb-2">Seeking a designer to create engaging, accessible interfaces for diverse learning experiences.</p>
+                                                    <button class="btn btn-sm btn-outline-primary">Apply</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <!-- Evaluation -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="bi bi-star me-2"></i> Idea Evaluation
+                            </div>
+                            <div class="card-body">
+                                <div class="rating-container">
+                                    <div class="rating-label">Innovation</div>
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star"></i>
+                                    </div>
+                                    <div class="rating-value">4.2</div>
+                                </div>
+                                <div class="rating-container">
+                                    <div class="rating-label">Feasibility</div>
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star"></i>
+                                        <i class="bi bi-star-fill rating-star"></i>
+                                    </div>
+                                    <div class="rating-value">3.7</div>
+                                </div>
+                                <div class="rating-container">
+                                    <div class="rating-label">Market Potential</div>
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                    </div>
+                                    <div class="rating-value">4.8</div>
+                                </div>
+                                <div class="rating-container">
+                                    <div class="rating-label">Impact</div>
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star"></i>
+                                    </div>
+                                    <div class="rating-value">4.3</div>
+                                </div>
+                                <div class="rating-container">
+                                    <div class="rating-label">Overall</div>
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star filled"></i>
+                                        <i class="bi bi-star-fill rating-star"></i>
+                                    </div>
+                                    <div class="rating-value">4.2</div>
+                                </div>
+                                <hr>
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-primary">
+                                        <i class="bi bi-star me-2"></i> Rate This Idea
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Similar Ideas -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="bi bi-lightbulb me-2"></i> Similar Ideas
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">Collaborative Learning Platform</h6>
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">A platform that connects students with similar learning goals for collaborative study sessions.</p>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">AR Educational Content</h6>
+                                            <span class="badge bg-warning">In Progress</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">Augmented reality applications for interactive, immersive learning experiences.</p>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">Gamified Learning System</h6>
+                                            <span class="badge bg-info">Concept</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">Educational platform that uses game mechanics to increase engagement and motivation.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Virtual Spaces -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-grid-3x3-gap me-2"></i> Related Virtual Spaces
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">EdTech Innovation Hub</h6>
+                                            <span class="badge bg-success">Live</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">Weekly discussions on the latest trends and innovations in educational technology.</p>
+                                        <div class="small mt-2">
+                                            <i class="bi bi-people me-1"></i> 12 participants
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">AI in Education Workshop</h6>
+                                            <span class="badge bg-primary">Scheduled</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">Hands-on workshop exploring applications of artificial intelligence in educational settings.</p>
+                                        <div class="small mt-2">
+                                            <i class="bi bi-calendar me-1"></i> Tomorrow, 3:00 PM
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-4">
+        <div class="container">
+            <p>© 2025 IdeaXchange. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</body>
+</html>

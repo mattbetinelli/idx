@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaXchange - Main Layout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #6610f2;
+        }
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+            height: calc(100vh - 56px);
+            position: sticky;
+            top: 56px;
+        }
+        .sidebar-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+        }
+        .sidebar-item.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #6610f2;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #f1f1f1;
+            font-weight: 600;
+        }
+        .idea-card {
+            transition: transform 0.2s;
+        }
+        .idea-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .badge-custom {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 500;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .gamification-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ffc107;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .level-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #6610f2;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .progress-xp {
+            height: 6px;
+            border-radius: 3px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">IdeaXchange</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Virtual Spaces</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Ideas</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-2">
+                    <input class="form-control me-2" type="search" placeholder="Search ideas, people, spaces...">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+                <div class="d-flex align-items-center">
+                    <div class="position-relative me-3">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="user-avatar me-2">
+                        <div class="d-none d-md-block">
+                            <div class="fw-bold">John Doe</div>
+                            <div class="d-flex align-items-center">
+                                <span class="level-indicator me-1">Lv 5</span>
+                                <div class="progress progress-xp flex-grow-1" style="width: 60px;">
+                                    <div class="progress-bar bg-success" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="sidebar-item active">
+                    <i class="bi bi-house-door me-2"></i> Dashboard
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-lightbulb me-2"></i> My Ideas
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-people me-2"></i> My Network
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-calendar-event me-2"></i> Events
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-chat-dots me-2"></i> Messages
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-trophy me-2"></i> Achievements
+                </div>
+                <div class="sidebar-item">
+                    <i class="bi bi-gear me-2"></i> Settings
+                </div>
+                <div class="mt-4 p-3">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i> New Idea
+                    </button>
+                </div>
+                <div class="mt-3 p-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Your Progress</h6>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="gamification-badge">XP</div>
+                                <div class="ms-2">
+                                    <div class="fw-bold">1,250 XP</div>
+                                    <div class="small text-muted">Next level: 1,500 XP</div>
+                                </div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: 75%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div class="text-center">
+                                    <div class="fw-bold">12</div>
+                                    <div class="small text-muted">Ideas</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="fw-bold">48</div>
+                                    <div class="small text-muted">Connections</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="fw-bold">5</div>
+                                    <div class="small text-muted">Projects</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Welcome back, John!</h5>
+                                <p class="card-text">Continue working on your ideas or explore new opportunities to collaborate.</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-plus-circle me-2"></i> New Idea
+                                    </button>
+                                    <button class="btn btn-outline-primary">
+                                        <i class="bi bi-search me-2"></i> Explore Ideas
+                                    </button>
+                                    <button class="btn btn-outline-primary">
+                                        <i class="bi bi-people me-2"></i> Find Collaborators
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Trending Ideas</h5>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card idea-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle me-2">
+                                        <span>Sarah Johnson</span>
+                                    </div>
+                                    <span class="badge bg-info">New</span>
+                                </div>
+                                <h6 class="card-title">Sustainable Urban Farming Solution</h6>
+                                <p class="card-text text-muted small">A network of community-managed vertical farms to provide fresh produce in urban food deserts.</p>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">Sustainability</span>
+                                    <span class="badge badge-custom">Agriculture</span>
+                                    <span class="badge badge-custom">Community</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-heart me-1"></i> 24
+                                        <i class="bi bi-chat-dots ms-2 me-1"></i> 8
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card idea-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle me-2">
+                                        <span>Michael Chen</span>
+                                    </div>
+                                    <span class="badge bg-warning">Hot</span>
+                                </div>
+                                <h6 class="card-title">AI-Powered Language Learning Platform</h6>
+                                <p class="card-text text-muted small">Personalized language learning using AI to adapt to individual learning styles and pace.</p>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">Education</span>
+                                    <span class="badge badge-custom">AI</span>
+                                    <span class="badge badge-custom">Languages</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-heart me-1"></i> 42
+                                        <i class="bi bi-chat-dots ms-2 me-1"></i> 15
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card idea-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle me-2">
+                                        <span>Elena Rodriguez</span>
+                                    </div>
+                                    <span class="badge bg-success">Funded</span>
+                                </div>
+                                <h6 class="card-title">Mental Health Support Network</h6>
+                                <p class="card-text text-muted small">Peer-to-peer mental health support platform with verified professionals for guidance.</p>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">Health</span>
+                                    <span class="badge badge-custom">Community</span>
+                                    <span class="badge badge-custom">Support</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-heart me-1"></i> 56
+                                        <i class="bi bi-chat-dots ms-2 me-1"></i> 23
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Active Virtual Spaces</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0">Sustainable Tech Brainstorming</h6>
+                                    <span class="badge bg-success">Live</span>
+                                </div>
+                                <p class="card-text text-muted small">Join our weekly brainstorming session on sustainable technology solutions.</p>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="d-flex">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                    </div>
+                                    <span class="ms-2 text-muted small">8 participants</span>
+                                </div>
+                                <button class="btn btn-success w-100">Join Now</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0">UX Design Workshop</h6>
+                                    <span class="badge bg-primary">Scheduled</span>
+                                </div>
+                                <p class="card-text text-muted small">Learn practical UX design techniques from industry experts. Starting in 2 hours.</p>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="d-flex">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle border border-white" style="margin-left: -5px;">
+                                    </div>
+                                    <span class="ms-2 text-muted small">12 registered</span>
+                                </div>
+                                <button class="btn btn-outline-primary w-100">Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Recommended Connections</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle me-3">
+                                    <div>
+                                        <h6 class="mb-0">David Kim</h6>
+                                        <p class="text-muted small mb-0">UX Designer & Developer</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">UX Design</span>
+                                    <span class="badge badge-custom">Frontend</span>
+                                    <span class="badge badge-custom">React</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">85% match</span>
+                                    <button class="btn btn-sm btn-outline-primary">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle me-3">
+                                    <div>
+                                        <h6 class="mb-0">Priya Sharma</h6>
+                                        <p class="text-muted small mb-0">Data Scientist</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">AI</span>
+                                    <span class="badge badge-custom">Machine Learning</span>
+                                    <span class="badge badge-custom">Python</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">78% match</span>
+                                    <button class="btn btn-sm btn-outline-primary">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle me-3">
+                                    <div>
+                                        <h6 class="mb-0">Marcus Johnson</h6>
+                                        <p class="text-muted small mb-0">Sustainability Consultant</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-custom">Sustainability</span>
+                                    <span class="badge badge-custom">Green Energy</span>
+                                    <span class="badge badge-custom">Consulting</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">72% match</span>
+                                    <button class="btn btn-sm btn-outline-primary">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-4">
+        <div class="container">
+            <p>© 2025 IdeaXchange. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</body>
+</html>
