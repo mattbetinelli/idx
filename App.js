@@ -19,6 +19,9 @@ import Register from './pages/auth/Register';
 import { AuthProvider } from './context/AuthContext';
 import { UIProvider } from './context/UIContext';
 
+// Error boundary component
+import ErrorBoundary from './components/ErrorBoundary';
+
 import './App.css';
 
 function App() {
@@ -31,15 +34,17 @@ function App() {
             <div className="content-container">
               <Sidebar />
               <main className="main-content">
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/profile/:id" element={<UserProfile />} />
-                  <Route path="/virtual-space/:id" element={<VirtualSpace />} />
-                  <Route path="/idea/:id" element={<IdeaDetails />} />
-                  <Route path="/explore" element={<ExploreIdeas />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                </Routes>
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/profile/:id" element={<UserProfile />} />
+                    <Route path="/virtual-space/:id" element={<VirtualSpace />} />
+                    <Route path="/idea/:id" element={<IdeaDetails />} />
+                    <Route path="/explore" element={<ExploreIdeas />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                  </Routes>
+                </ErrorBoundary>
               </main>
             </div>
             <Footer />

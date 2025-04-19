@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
   skills: [{
     name: {
       type: String,
-      required: true
+      required: [true, 'Please provide a skill name']
     },
     level: {
       type: String,
@@ -48,7 +48,15 @@ const UserSchema = new mongoose.Schema({
       default: 'Beginner'
     }
   }],
-  interests: [String],
+  interests: {
+    type: [String],
+    validate: {
+      validator: function(v) {
+        return v.length > 0;
+      },
+      message: 'Please provide at least one interest'
+    }
+  },
   experience: [{
     title: String,
     company: String,
