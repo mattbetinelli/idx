@@ -128,4 +128,68 @@ describe('Dashboard Component', () => {
       expect(screen.getByText(/250 \/ 500 XP/i)).toBeInTheDocument();
     });
   });
+
+  test('clicking on trending idea navigates to idea details', async () => {
+    await waitFor(() => {
+      const ideaLink = screen.getByText('Test Idea 1');
+      fireEvent.click(ideaLink);
+      expect(window.location.pathname).toBe('/idea/1');
+    });
+  });
+
+  test('clicking on active space navigates to space details', async () => {
+    await waitFor(() => {
+      const spaceLink = screen.getByText('Test Space 1');
+      fireEvent.click(spaceLink);
+      expect(window.location.pathname).toBe('/virtual-space/1');
+    });
+  });
+
+  test('handles error when fetching trending ideas', async () => {
+    jest.mock('../src/services/api', () => ({
+      getTrendingIdeas: jest.fn().mockRejectedValue(new Error('Failed to fetch trending ideas'))
+    }));
+
+    render(
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Failed to fetch trending ideas/i)).toBeInTheDocument();
+    });
+  });
+
+  test('handles error when fetching active spaces', async () => {
+    jest.mock('../src/services/api', () => ({
+      getActiveSpaces: jest.fn().mockRejectedValue(new Error('Failed to fetch active spaces'))
+    }));
+
+    render(
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Failed to fetch active spaces/i)).toBeInTheDocument();
+    });
+  });
+
+  test('handles error when fetching recommended connections', async () => {
+    jest.mock('../src/services/api', () => ({
+      getRecommendedConnections: jest.fn().mockRejectedValue(new Error('Failed to fetch recommended connections'))
+    }));
+
+    render(
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Failed to fetch recommended connections/i)).toBeInTheDocument();
+    });
+  });
 });

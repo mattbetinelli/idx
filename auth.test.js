@@ -162,4 +162,192 @@ describe('Auth API', () => {
       expect(res.body).toHaveProperty('success', false);
     });
   });
+
+  describe('GET /api/auth/logout', () => {
+    let token;
+
+    beforeEach(async () => {
+      // Create a test user and get token
+      const user = await User.create({
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'password123'
+      });
+
+      token = user.getSignedJwtToken();
+    });
+
+    it('should logout a user with valid token', async () => {
+      const res = await request(app)
+        .get('/api/auth/logout')
+        .set('Authorization', `Bearer ${token}`);
+      
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('success', true);
+    });
+
+    it('should not logout a user without token', async () => {
+      const res = await request(app)
+        .get('/api/auth/logout');
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not logout a user with invalid token', async () => {
+      const res = await request(app)
+        .get('/api/auth/logout')
+        .set('Authorization', 'Bearer invalidtoken');
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+  });
+
+  describe('PUT /api/auth/updatedetails', () => {
+    let token;
+
+    beforeEach(async () => {
+      // Create a test user and get token
+      const user = await User.create({
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'password123'
+      });
+
+      token = user.getSignedJwtToken();
+    });
+
+    it('should update user details with valid token', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatedetails')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'Updated User',
+          email: 'updated@example.com'
+        });
+      
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('success', true);
+      expect(res.body.data).toHaveProperty('name', 'Updated User');
+      expect(res.body.data).toHaveProperty('email', 'updated@example.com');
+    });
+
+    it('should not update user details without token', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatedetails')
+        .send({
+          name: 'Updated User',
+          email: 'updated@example.com'
+        });
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not update user details with invalid token', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatedetails')
+        .set('Authorization', 'Bearer invalidtoken')
+        .send({
+          name: 'Updated User',
+          email: 'updated@example.com'
+        });
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not update user details with invalid data', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatedetails')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: '',
+          email: 'invalid-email'
+        });
+      
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('success', false);
+    });
+  });
+
+  describe('PUT /api/auth/updatepassword', () => {
+    let token;
+
+    beforeEach(async () => {
+      // Create a test user and get token
+      const user = await User.create({
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'password123'
+      });
+
+      token = user.getSignedJwtToken();
+    });
+
+    it('should update user password with valid token and correct current password', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatepassword')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          currentPassword: 'password123',
+          newPassword: 'newpassword123'
+        });
+      
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('success', true);
+    });
+
+    it('should not update user password without token', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatepassword')
+        .send({
+          currentPassword: 'password123',
+          newPassword: 'newpassword123'
+        });
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not update user password with invalid token', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatepassword')
+        .set('Authorization', 'Bearer invalidtoken')
+        .send({
+          currentPassword: 'password123',
+          newPassword: 'newpassword123'
+        });
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not update user password with incorrect current password', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatepassword')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          currentPassword: 'wrongpassword',
+          newPassword: 'newpassword123'
+        });
+      
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty('success', false);
+    });
+
+    it('should not update user password with invalid new password', async () => {
+      const res = await request(app)
+        .put('/api/auth/updatepassword')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          currentPassword: 'password123',
+          newPassword: 'short'
+        });
+      
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('success', false);
+    });
+  });
 });
